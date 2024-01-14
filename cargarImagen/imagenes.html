@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir, Mostrar y Descargar Imágenes</title>
+    <title>Subir y Mostrar Imágenes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,31 +18,30 @@
     </style>
 </head>
 <body>
-    <h1>Subir, Mostrar y Descargar Imágenes</h1>
+    <h1>Subir y Mostrar Imágenes</h1>
 
     <input type="file" id="inputImagen" accept="image/*">
-    <button onclick="subirMostrarDescargarImagen()">Descargar Imagen</button>
+    <button onclick="subirImagen()">Subir Imagen</button>
 
     <div id="imagenMostrada"></div>
+    <a id="descargarEnlace" style="display: none;">Descargar Imagen</a>
 
     <script>
-        function subirMostrarDescargarImagen() {
+        function subirImagen() {
             var inputImagen = document.getElementById('inputImagen');
             var imagenMostrada = document.getElementById('imagenMostrada');
+            var descargarEnlace = document.getElementById('descargarEnlace');
 
             var archivo = inputImagen.files[0];
             var lector = new FileReader();
 
             lector.onload = function(e) {
                 imagenMostrada.innerHTML = '<img src="' + e.target.result + '" alt="Imagen Subida">';
-
-                var enlaceTemporal = document.createElement('a');
-                enlaceTemporal.href = e.target.result;
-                enlaceTemporal.download = archivo.name.replace(/\.[^/.]+$/, "");
-                enlaceTemporal.style.display = 'none';
-                document.body.appendChild(enlaceTemporal);
-                enlaceTemporal.click();
-                document.body.removeChild(enlaceTemporal);
+                
+                descargarEnlace.download = archivo.name.replace(/\.[^/.]+$/, "");
+                
+                descargarEnlace.href = e.target.result;
+                descargarEnlace.style.display = 'block';
             }
 
             lector.readAsDataURL(archivo);
