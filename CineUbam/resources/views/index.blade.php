@@ -169,6 +169,7 @@
 
   function closeModal() {
     document.getElementById("myModal").style.display = "none";
+    document.getElementById("addModal").style.display = "none";
   }
 
   function calcularCambio() {
@@ -198,21 +199,50 @@
   function openAddModal2() {
     document.getElementById("addModal").style.display = "block";
   }
-</script>
+  
+  // Función para agregar una nueva película
+  function addNewMovie(event) {
+    event.preventDefault();
+    
+    // Obtener los valores del formulario
+    var newName = document.getElementById("newName").value;
+    var newImage = document.getElementById("movieImage").value;
+    
+    // Crear el nuevo elemento div para la película
+    var movieContainer = document.querySelector(".movie-container");
+    var newMovieCard = document.createElement("div");
+    newMovieCard.classList.add("movie-card");
+    newMovieCard.innerHTML = `
+      <img class="movie-image" src="${newImage}" alt="${newName}">
+      <div class="movie-title">${newName}</div>
+    `;
+    
+    // Agregar un event listener para abrir el modal de detalles de la película
+    newMovieCard.addEventListener("click", function() {
+      openModal(newName, newImage);
+    });
+    
+    // Agregar el nuevo elemento al contenedor de películas
+    movieContainer.appendChild(newMovieCard);
 
+    // Cerrar el modal de agregar película
+    document.getElementById("addModal").style.display = "none";
+  }
+</script>
 
 <div id="addModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeAddModal()">&times;</span>
     <h3>Agregar Película</h3>
     
-    <form id="addMovieForm">
+    <form action="{{route('funcion.store')}}" method="POST">
       @csrf
       <label for="movieName">Nombre de la Película:</label><br>
-      <input type="text" id="movieName" name="movieName" required><br><br>
+      <input type="text" id="newName" name="newName" required><br><br>
       <label for="movieImage">URL de la Imagen:</label><br>
       <input type="text" id="movieImage" name="movieImage" required><br><br>
-      <button type="submit">Agregar</button>
+      <button onclick="addNewMovie(event)">Poner Funcion</button>
+      <!-- <button onclick="addNewMovie(event)">Poner Funcion</button> -->
     </form>
   </div>
 </div>

@@ -29,17 +29,17 @@ class TblOpeFuncionController extends Controller
      */
     public function store(Request $request)
     {
-        //srive para guradar datos en la bd
-        //print_r($_POST);
-        $movieName = $request->post('movieName');
-        $moviePrecio = $request->post('moviePrecio');
+    //   srive para guradar datos en la bd
+        print_r($_POST);
+    //    $newName = $request->post('newName');
+    //    $movieImage = $request->post('movieImage');
 
-    DB::table('tbl_ope_funcion')->insert([
-        'Funcion_Nombre' => $movieName,
-        'Funcion_Imagen' => $moviePrecio,
-    ]);
+    //DB::table('tbl_ope_funcion')->insert([
+    //    'Funcion_Nombre' => $newName,
+    //    'Funcion_Imagen' => $movieImage,
+    //]);
 
-        return redirect()->route('peliculas.index')->with('success','¡Agregado con exito!');
+        return redirect()->route('peliculas.index')->with('success','¡Nueva Pelicula!');
     }
 
     /**
