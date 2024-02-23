@@ -136,7 +136,7 @@
 
 <div id="myModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
+    <span class="close" onclick="document.getElementById('myModal').style.display = 'none';">&times;</span>
     <h3 id="movieTitle"></h3>
     
     <form action="{{route('peliculas.store')}}" method="POST">
@@ -232,7 +232,7 @@
 
 <div id="addModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeAddModal()">&times;</span>
+    <span class="close" onclick="document.getElementById('addModal').style.display = 'none';">&times;</span>
     <h3>Agregar Película</h3>
     
     <form action="{{route('funcion.store')}}" method="POST">
@@ -240,10 +240,52 @@
       <label for="movieName">Nombre de la Película:</label><br>
       <input type="text" id="newName" name="newName" required><br><br>
       <label for="movieImage">URL de la Imagen:</label><br>
-      <input type="text" id="movieImage" name="movieImage" required><br><br>
-      <button onclick="addNewMovie(event)">Poner Funcion</button>
+      <input type="text" id="movieImage" name="movieImage" required  onchange="addNewMovie(event)"><br><br>
       <!-- <button onclick="addNewMovie(event)">Poner Funcion</button> -->
+    <button>Poner Funcion</button>
     </form>
   </div>
 </div>
-  @endsection
+
+@foreach ($datos as $item)
+{{$item->Funcion_Nombre}}
+{{$item->Funcion_Imagen}}
+@endforeach
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  fetchPeliculas();
+});
+
+function fetchPeliculas() {
+  fetch('{{route('funcion.index')}}') // Cambia esto por la ruta real a tu endpoint
+    .then(response => response.json())
+    .then(datos => {
+      datos.forEach(item => {
+        addPeliculaToDOM(item.Funcion_Nombre, item.Funcion_Imagen);
+      });
+    })
+    .catch(error => console.error('Error al cargar las películas:', error));
+}
+
+function addPeliculaToDOM(nombre, imagen) {
+  const movieContainer = document.querySelector('.movie-container');
+  const movieCard = document.createElement('div');
+  movieCard.classList.add('movie-card');
+  movieCard.setAttribute('onclick', `openModal('${nombre}', '${imagen}')`);
+
+  const movieImage = document.createElement('img');
+  movieImage.classList.add('movie-image');
+  movieImage.src = imagen;
+  movieImage.alt = nombre;
+
+  const movieTitle = document.createElement('div');
+  movieTitle.classList.add('movie-title');
+  movieTitle.textContent = nombre;
+
+  movieCard.appendChild(movieImage);
+  movieCard.appendChild(movieTitle);
+
+  movieContainer.appendChild(movieCard);
+}
+  </script>
+  @endsections

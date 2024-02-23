@@ -13,7 +13,8 @@ class TblOpeFuncionController extends Controller
      */
     public function index()
     {
-        //
+        $datos=Tbl_ope_funcion::all();
+        return view('index',compact('datos'));
     }
 
     /**
@@ -34,12 +35,12 @@ class TblOpeFuncionController extends Controller
     //    $newName = $request->post('newName');
     //    $movieImage = $request->post('movieImage');
 
-    //DB::table('tbl_ope_funcion')->insert([
+    //DB::table('tbl_ope_funcions')->insert([
     //    'Funcion_Nombre' => $newName,
     //    'Funcion_Imagen' => $movieImage,
     //]);
 
-        return redirect()->route('peliculas.index')->with('success','¡Nueva Pelicula!');
+        return redirect()->route('funcion.index')->with('success','¡Nueva Pelicula!');
     }
 
     /**
