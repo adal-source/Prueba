@@ -14,7 +14,7 @@ class TblOpePeliculasController extends Controller
     public function index()
     {
         //
-        //return view('index');
+        return view('index');
     }
 
     /**
@@ -31,22 +31,22 @@ class TblOpePeliculasController extends Controller
     public function store(Request $request)
     {
     //    srive para guradar datos en la bd
-        print_r($_POST);
-    //    $movieName = $request->post('movieName');
-    //    $moviePrecio = $request->post('moviePrecio');
-    //    $cantidad = $request->post('cantidad');
-    //    $pago = $request->post('pago');
-    //    $activo = $request->post('activo');
+    //    print_r($_POST);
+        $movieName = $request->post('movieName');
+        $moviePrecio = $request->post('moviePrecio');
+        $cantidad = $request->post('cantidad');
+        $pago = $request->post('pago');
+        $activo = $request->post('activo');
 
-    //DB::table('tbl_ope_peliculas')->insert([
-    //    'Pelicula_Nombre' => $movieName,
-    //    'Pelicula_Precio' => $moviePrecio,
-    //    'Pelicula_Entradas' => $cantidad,
-    //    'Pelicula_Total' => $pago,
-    //    'Pelicula_Activo' => $activo,
-    //]);
+    DB::table('tbl_ope_peliculas')->insert([
+        'Pelicula_Nombre' => $movieName,
+        'Pelicula_Precio' => $moviePrecio,
+        'Pelicula_Entradas' => $cantidad,
+        'Pelicula_Total' => $pago,
+        'Pelicula_Activo' => $activo,
+    ]);
 
-        return redirect()->route('funcion.index')->with('success','¡Pagado con exito!');
+        return redirect()->route('peliculas.index')->with('success','¡Pagado con exito!');
     }
 
     /**

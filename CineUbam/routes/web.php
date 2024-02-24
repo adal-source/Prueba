@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 
 //Route::get('/CineUbam', [TblOpePeliculasController::class, 'index'])->name('peliculas.index');
-//Route::get('/', [TblOpePeliculasController::class, 'index'])->name('peliculas.index');
+Route::get('/', [TblOpePeliculasController::class, 'index'])->name('peliculas.index');
 Route::post('/store', [TblOpePeliculasController::class, 'store'])->name('peliculas.store');
 Route::post('/store2', [TblOpeFuncionController::class, 'store'])->name('funcion.store');
-Route::get('/', [TblOpeFuncionController::class, 'index'])->name('funcion.index');
+//Route::get('/', [TblOpeFuncionController::class, 'index'])->name('funcion.index');
 //Route::get('/edit', [TblOpePeliculaController::class, 'edit'])->name('pelicula.edit');

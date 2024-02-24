@@ -100,38 +100,6 @@
       </div>
   </div>
 <div class="movie-container">
-  <div class="movie-card" onclick="openModal('La Momia', 'img1.jpg')">
-    <img class="movie-image" src="img1.jpg" alt="La Momia" id="imageUrl">
-    <div class="movie-title">La Momia</div>
-  </div>
-  <div class="movie-card" onclick="openModal('Harry Potter', 'pelicula2.jpg')">
-    <img class="movie-image" src="img2.jpg" alt="Harry Potter" id="imageUrl">
-    <div class="movie-title">Harry Potter</div>
-  </div>
-  <div class="movie-card" onclick="openModal('Avatar', 'img3.jpg')">
-    <img class="movie-image" src="img3.jpg" alt="Avatar" id="imageUrl">
-    <div class="movie-title">Avatar</div>
-  </div>
-  <div class="movie-card" onclick="openModal('Soy Leyenda', 'img4.jpg')">
-    <img class="movie-image" src="img4.jpg" alt="Soy Leyenda" id="imageUrl">
-    <div class="movie-title">Soy Leyevda</div>
-  </div>
-  <div class="movie-card" onclick="openModal('EL Gigante de Hierro', 'img5.jpg')">
-    <img class="movie-image" src="img5.jpg" alt="EL Gigante de Hierro" id="imageUrl">
-    <div class="movie-title">EL Gigante de Hierro</div>
-  </div>
-  <div class="movie-card" onclick="openModal('El Hombre Vicentenario', 'img6.jpg')">
-    <img class="movie-image" src="img6.jpg" alt="El Hombre Vicentenario" id="imageUrl">
-    <div class="movie-title">El Hombre Vicentenario</div>
-  </div>
-  <div class="movie-card" onclick="openModal('Termineitor', 'img7.jpg')">
-    <img class="movie-image" src="img7.jpg" alt="Termineitor" id="imageUrl">
-    <div class="movie-title">Termineitor</div>
-  </div>
-  <div class="movie-card" onclick="openModal('Wall-E', 'img8.jpg')">
-    <img class="movie-image" src="img8.jpg" alt="Wall-E" id="imageUrl">
-    <div class="movie-title">Wall-E</div>
-  </div>
 </div>
 
 <div id="myModal" class="modal">
@@ -167,11 +135,6 @@
     document.getElementById("myModal").style.display = "block";
   }
 
-  function closeModal() {
-    document.getElementById("myModal").style.display = "none";
-    document.getElementById("addModal").style.display = "none";
-  }
-
   function calcularCambio() {
     const cantidadBoletos = parseInt(document.getElementById("cantidad").value);
     const billetePago = parseInt(document.getElementById("pago").value);
@@ -200,34 +163,6 @@
     document.getElementById("addModal").style.display = "block";
   }
   
-  // Función para agregar una nueva película
-  function addNewMovie(event) {
-    event.preventDefault();
-    
-    // Obtener los valores del formulario
-    var newName = document.getElementById("newName").value;
-    var newImage = document.getElementById("movieImage").value;
-    
-    // Crear el nuevo elemento div para la película
-    var movieContainer = document.querySelector(".movie-container");
-    var newMovieCard = document.createElement("div");
-    newMovieCard.classList.add("movie-card");
-    newMovieCard.innerHTML = `
-      <img class="movie-image" src="${newImage}" alt="${newName}">
-      <div class="movie-title">${newName}</div>
-    `;
-    
-    // Agregar un event listener para abrir el modal de detalles de la película
-    newMovieCard.addEventListener("click", function() {
-      openModal(newName, newImage);
-    });
-    
-    // Agregar el nuevo elemento al contenedor de películas
-    movieContainer.appendChild(newMovieCard);
-
-    // Cerrar el modal de agregar película
-    document.getElementById("addModal").style.display = "none";
-  }
 </script>
 
 <div id="addModal" class="modal">
@@ -240,52 +175,55 @@
       <label for="movieName">Nombre de la Película:</label><br>
       <input type="text" id="newName" name="newName" required><br><br>
       <label for="movieImage">URL de la Imagen:</label><br>
-      <input type="text" id="movieImage" name="movieImage" required  onchange="addNewMovie(event)"><br><br>
-      <!-- <button onclick="addNewMovie(event)">Poner Funcion</button> -->
-    <button>Poner Funcion</button>
+      <input type="text" id="movieImage" name="movieImage" required><br><br>
+    <button>Agregar Funcion</button>
     </form>
   </div>
 </div>
 
-@foreach ($datos as $item)
-{{$item->Funcion_Nombre}}
-{{$item->Funcion_Imagen}}
-@endforeach
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-  fetchPeliculas();
-});
+@php
+  // Conexión a la base de datos
+$host = "localhost"; // o la IP del servidor de bases de datos
+$username = "root";
+$password = "";
+$database = "cineubam";
 
-function fetchPeliculas() {
-  fetch('{{route('funcion.index')}}') // Cambia esto por la ruta real a tu endpoint
-    .then(response => response.json())
-    .then(datos => {
-      datos.forEach(item => {
-        addPeliculaToDOM(item.Funcion_Nombre, item.Funcion_Imagen);
-      });
-    })
-    .catch(error => console.error('Error al cargar las películas:', error));
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$database", $username, $password);
+    // Establecer el modo de error PDO a excepción
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Consulta SQL para obtener todas las películas
+    $sql = "SELECT Funcion_Nombre, Funcion_Imagen FROM tbl_ope_funcions";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+
+    // Resultado
+    $result = $stmt->fetchAll();
+
+} catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
+@endphp
 
-function addPeliculaToDOM(nombre, imagen) {
-  const movieContainer = document.querySelector('.movie-container');
-  const movieCard = document.createElement('div');
-  movieCard.classList.add('movie-card');
-  movieCard.setAttribute('onclick', `openModal('${nombre}', '${imagen}')`);
+<div class="movie-container">
+  @php
+    
+  if ($result) {
+      foreach ($result as $row) {
+          // Asegúrate de usar htmlspecialchars() para evitar XSS
+          $nombre_pelicula = htmlspecialchars($row['Funcion_Nombre']);
+          $url_imagen = htmlspecialchars($row['Funcion_Imagen']);
 
-  const movieImage = document.createElement('img');
-  movieImage.classList.add('movie-image');
-  movieImage.src = imagen;
-  movieImage.alt = nombre;
+          echo "<div class='movie-card' onclick=\"openModal('$nombre_pelicula', '$url_imagen')\">";
+          echo "<img class='movie-image' src='$url_imagen' alt='$nombre_pelicula'>";
+          echo "<div class='movie-title'>$nombre_pelicula</div>";
+          echo "</div>";
+      }
+  } else {
+      echo "<p>No se encontraron películas.</p>";
+  }
+  @endphp
+</div>
 
-  const movieTitle = document.createElement('div');
-  movieTitle.classList.add('movie-title');
-  movieTitle.textContent = nombre;
-
-  movieCard.appendChild(movieImage);
-  movieCard.appendChild(movieTitle);
-
-  movieContainer.appendChild(movieCard);
-}
-  </script>
-  @endsections
+@endsection
